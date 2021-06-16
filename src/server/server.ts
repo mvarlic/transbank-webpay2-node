@@ -3,7 +3,7 @@ import { WebPayController } from '../controller/webpay.controller';
 const app = express()
 const PORT : string|number = process.env.PORT || 4000;
 
-app.use("/",(req, res) =>{
+app.get("/",(req, res) =>{
     res.send("<h1>Welcome to your simple server! Awesome right</h1>");
 });
 
