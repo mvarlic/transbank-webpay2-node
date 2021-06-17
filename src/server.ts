@@ -1,12 +1,18 @@
 import express from 'express';
 import path from "path";
 import { WebPayController } from './controller/webpay.controller';
+const cookieParser = require("cookie-parser");
+
+
 const app = express()
 const PORT : string|number = process.env.PORT || 3000;
 
 app.set( "views", path.join( __dirname, "views" ) );
 app.set( "view engine", "ejs" );
 app.use(express.static(__dirname + '/public'));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 /*
 app.get("/",(req, res) =>{
     res.send("<h1>Welcome to your simple server! Awesome right</h1>");

@@ -39,30 +39,43 @@ export class WebPayController {
 
     static commitTransaction = asyncHandler(async function (req: any, resp: any, next: any) {
         let token = req.body?.token_ws;
-      
+        let result = "";
+        let status = null;
         if (token){
-            const commitResponse = await WebpayPlus.Transaction.commit(token);
-            let viewData = {
-                token,
-                commitResponse,
-              };
-            console.log(commitResponse);
+            const r = await WebpayPlus.Transaction.commit(token);
+            console.log(r);
+            result = `La transacción se ha ejecutado correctamente => tarjeta: 'XXXX XXXX XXXX ${r.card_detail.card_number}' ,codigo de autorizacion: '${r.authorization_code}'`;
+            if (r.response_code === 0) {
+                status = 'AUTHORIZED';
+            } else {
+                status = 'REJECTED';
+            }
         }
-        
-      
-        
-        const result = "";
-        const transaction = {};
-        const status = "";
-        resp.render("webpay-plus/commit",{result, transaction, status}) 
-        /*
-        resp.render("webpay_plus/commit", {
-          step: "Confirmar Transacción",
-          stepDescription:
-            "En este paso tenemos que confirmar la transacción con el objetivo de avisar a " +
-            "Transbank que hemos recibido la transacción ha sido recibida exitosamente. En caso de que " +
-            "no se confirme la transacción, ésta será reversada.",
-          viewData,
-        });*/
+        else{
+            status = 'ABORTED';
+            result = "Ocurrio un error en la transacción"
+        }
+
+        resp.render("webpay-plus/commit",{result, status}) 
+
       });
 }
+
+
+/*
+
+{
+  vci: 'TSY',
+  amount: 1128,
+  status: 'AUTHORIZED',
+  buy_order: 'O-57701',
+  session_id: 'S-31321',
+  card_detail: { card_number: '6623' },
+  accounting_date: '0616',
+  transaction_date: '2021-06-17T01:28:35.278Z',
+  authorization_code: '1213',
+  payment_type_code: 'VN',
+  response_code: 0,
+  installments_number: 0
+}
+*/
