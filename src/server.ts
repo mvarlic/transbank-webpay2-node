@@ -2,7 +2,7 @@ import express from 'express';
 import path from "path";
 import { WebPayController } from './controller/webpay.controller';
 const app = express()
-const PORT : string|number = process.env.PORT || 4000;
+const PORT : string|number = process.env.PORT || 3000;
 
 app.set( "views", path.join( __dirname, "views" ) );
 app.set( "view engine", "ejs" );
@@ -15,6 +15,8 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
-app.get('/create', WebPayController.createTransaction);
+app.get('/webpay-plus/create', WebPayController.createTransaction);
+app.post('/webpay-plus/commit', WebPayController.commitTransaction);
+
 
 app.listen(PORT,() => console.log(`hosting ${PORT}`));
